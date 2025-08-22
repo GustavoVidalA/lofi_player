@@ -1,7 +1,7 @@
-import { FaPlay } from 'react-icons/fa'
 import FollowButton from './FollowButton'
+import { PrevButton, PlayPauseButton, NextButton } from './PlayerControls'
 
-function Header({ title, artist, cover }) {
+function Header({ title, artist, cover, isPlaying, onToggle, onNext, onPrev }) {
   return (
     <header className="flex items-center gap-8 bg-gradient-to-r from-purple-600 to-purple-900 text-white rounded-xl p-6 sm:p-10 mb-10">
       <img
@@ -15,12 +15,9 @@ function Header({ title, artist, cover }) {
         <p className="text-xs text-white/70">661,250 monthly listeners</p>
         <div className="flex items-center gap-4 mt-4">
           <FollowButton />
-          <button
-            className="bg-purple-500 w-12 h-12 rounded-full flex items-center justify-center hover:scale-105 transition"
-            aria-label="Play"
-          >
-            <FaPlay />
-          </button>
+          <PrevButton onPrev={onPrev} />
+          <PlayPauseButton isPlaying={isPlaying} onToggle={onToggle} />
+          <NextButton onNext={onNext} />
         </div>
       </div>
     </header>

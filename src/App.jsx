@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import './index.css'
 import Header from './components/Header'
 import TrackList from './components/TrackList'
-import PlayerControls from './components/PlayerControls'
 import { tracks } from './data/tracks'
 
 
@@ -66,9 +65,6 @@ function App() {
           // Show artist smaller (optional)
           artist={currentTrack.artist}
           cover={currentTrack.cover}
-        />
-
-        <PlayerControls
           isPlaying={isPlaying}
           onToggle={toggle}
           onNext={next}
