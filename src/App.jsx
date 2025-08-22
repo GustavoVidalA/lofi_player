@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import Sidebar from "./Sidebar";
+import Sidebar from "./components/Sidebar";
 import "./index.css";
 import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
 import { bandBios } from "./data/bandBios";
