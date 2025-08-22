@@ -62,12 +62,15 @@ Prettier
 ├─ package.json
 └─ README.md
 
+
+```
+.
 ├── public/
-│   ├── tracks/           # MP3 files
+│   ├── tracks/             # MP3 files
 │   │   ├── Colors.mp3
 │   │   ├── Captured.mp3
 │   │   └── lo-fi-rain.mp3
-│   └── covers/           # Cover images
+│   └── covers/             # Cover images
 │       ├── colors.png
 │       ├── captured.png
 │       └── yarin.png
@@ -83,7 +86,7 @@ Prettier
 ├── postcss.config.js
 ├── package.json
 └── README.md
-
+```
 
 Important: Audio and image assets must live under /public (e.g., /public/tracks/..., /public/covers/...) so they can be served by Vite/Vercel at /tracks/... and /covers/....
 
