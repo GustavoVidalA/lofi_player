@@ -2,7 +2,9 @@ import { useRef, useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import "./index.css";
 import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
+import { bandBios } from "./data/bandBios";
 
+// Demo tracks (ajusta rutas a tus archivos en /public)
 const tracks = [
   {
     id: 1,
@@ -30,13 +32,13 @@ const tracks = [
 export default function App() {
   const audioRef = useRef(null);
 
-  const [current, setCurrent] = useState(tracks[0]); // pista actual
+  const [current, setCurrent] = useState(tracks[0]); // current track
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0); // 0..100
-  const [duration, setDuration] = useState(0); // seg
-  const [currentTime, setCurrentTime] = useState(0); // seg
+  const [duration, setDuration] = useState(0); // seconds
+  const [currentTime, setCurrentTime] = useState(0); // seconds
 
-  // Reproducir/pausar
+  // Play / Pause
   const togglePlay = () => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -49,7 +51,7 @@ export default function App() {
     }
   };
 
-  // Al cambiar de pista: cargar y reproducir
+  // When current track changes → load & play
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -60,7 +62,7 @@ export default function App() {
       .catch(() => setIsPlaying(false));
   }, [current]);
 
-  // Listeners de progreso y duración
+  // Progress / duration listeners
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -69,11 +71,8 @@ export default function App() {
       setCurrentTime(audio.currentTime || 0);
       setProgress(((audio.currentTime || 0) / (audio.duration || 1)) * 100);
     };
-    const onLoaded = () => {
-      setDuration(audio.duration || 0);
-    };
+    const onLoaded = () => setDuration(audio.duration || 0);
     const onEnded = () => {
-      // siguiente pista simple (loop)
       const idx = tracks.findIndex((t) => t.id === current.id);
       const next = tracks[(idx + 1) % tracks.length];
       setCurrent(next);
@@ -82,7 +81,6 @@ export default function App() {
     audio.addEventListener("timeupdate", onTime);
     audio.addEventListener("loadedmetadata", onLoaded);
     audio.addEventListener("ended", onEnded);
-
     return () => {
       audio.removeEventListener("timeupdate", onTime);
       audio.removeEventListener("loadedmetadata", onLoaded);
@@ -90,38 +88,34 @@ export default function App() {
     };
   }, [current]);
 
-  // Click en barra de progreso para “scrub”
+  // Seek by clicking on progress bar
   const handleSeek = (e) => {
     const audio = audioRef.current;
     if (!audio) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const ratio = Math.min(
-      Math.max((e.clientX - rect.left) / rect.width, 0),
-      1
-    );
+    const ratio = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
     audio.currentTime = ratio * (audio.duration || 0);
   };
 
   const fmt = (s) => {
     if (!isFinite(s)) return "--:--";
     const m = Math.floor(s / 60);
-    const ss = Math.floor(s % 60)
-      .toString()
-      .padStart(2, "0");
+    const ss = Math.floor(s % 60).toString().padStart(2, "0");
     return `${m}:${ss}`;
   };
 
   return (
     <div className="w-full h-screen grid grid-cols-[min-content_auto] grid-rows-[1fr_auto] bg-black text-white font-sans">
-      {/* Sidebar redimensionable */}
-      <Sidebar />
+      {/* Sidebar (now receives artist & bio) */}
+      <Sidebar
+        artist={current.artist}
+        bio={bandBios[current.artist] || "No bio available for this artist."}
+      />
 
       {/* Main content */}
       <main className="bg-gradient-to-b from-neutral-900 to-black p-8 overflow-y-auto">
-        <h1 className="text-3xl font-bold mb-2">Bienvenido a tu musica</h1>
-        <p className="text-zinc-400">
-          Explora playlists, artistas, y albums aqui.
-        </p>
+        <h1 className="text-3xl font-bold mb-2">Bienvenido a tu música</h1>
+        <p className="text-zinc-400">Explora playlists, artistas y álbumes aquí.</p>
 
         <div className="grid gap-6 mt-6 grid-cols-[repeat(auto-fill,minmax(12rem,1fr))]">
           {tracks.map((t) => (
@@ -131,7 +125,6 @@ export default function App() {
               className="text-left bg-zinc-800 hover:bg-zinc-700 transition rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-zinc-500/50"
             >
               <div className="aspect-square rounded-lg overflow-hidden bg-zinc-700 mb-3">
-                {/* imagen de portada */}
                 <img
                   src={t.cover}
                   alt={t.title}
@@ -148,12 +141,12 @@ export default function App() {
         </div>
       </main>
 
-      {/* Audio oculto */}
+      {/* Hidden audio element */}
       <audio ref={audioRef} preload="metadata" />
 
       {/* Player */}
       <footer className="col-span-2 bg-zinc-950 border-t border-zinc-800 h-20 flex items-center justify-between px-6">
-        {/* info canción */}
+        {/* Track info */}
         <div className="flex items-center gap-4 min-w-0">
           <div className="w-14 h-14 bg-zinc-700 rounded overflow-hidden">
             <img
@@ -171,7 +164,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* controles */}
+        {/* Controls */}
         <div className="flex items-center gap-6">
           <button
             className="hover:text-green-400"
@@ -206,7 +199,7 @@ export default function App() {
           </button>
         </div>
 
-        {/* progreso */}
+        {/* Progress bar */}
         <div className="flex items-center gap-3 w-64">
           <span className="text-xs text-zinc-400 w-10 text-right">
             {fmt(currentTime)}
@@ -226,3 +219,4 @@ export default function App() {
     </div>
   );
 }
+
