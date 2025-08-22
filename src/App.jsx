@@ -3,7 +3,6 @@ import Sidebar from "./Sidebar";
 import "./index.css";
 import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
 
-
 const tracks = [
   {
     id: 1,
@@ -31,11 +30,11 @@ const tracks = [
 export default function App() {
   const audioRef = useRef(null);
 
-  const [current, setCurrent] = useState(tracks[0]);   // pista actual
+  const [current, setCurrent] = useState(tracks[0]); // pista actual
   const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);        // 0..100
-  const [duration, setDuration] = useState(0);        // seg
-  const [currentTime, setCurrentTime] = useState(0);  // seg
+  const [progress, setProgress] = useState(0); // 0..100
+  const [duration, setDuration] = useState(0); // seg
+  const [currentTime, setCurrentTime] = useState(0); // seg
 
   // Reproducir/pausar
   const togglePlay = () => {
@@ -55,7 +54,10 @@ export default function App() {
     const audio = audioRef.current;
     if (!audio) return;
     audio.src = current.src;
-    audio.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
+    audio
+      .play()
+      .then(() => setIsPlaying(true))
+      .catch(() => setIsPlaying(false));
   }, [current]);
 
   // Listeners de progreso y duración
@@ -72,7 +74,7 @@ export default function App() {
     };
     const onEnded = () => {
       // siguiente pista simple (loop)
-      const idx = tracks.findIndex(t => t.id === current.id);
+      const idx = tracks.findIndex((t) => t.id === current.id);
       const next = tracks[(idx + 1) % tracks.length];
       setCurrent(next);
     };
@@ -93,16 +95,21 @@ export default function App() {
     const audio = audioRef.current;
     if (!audio) return;
     const rect = e.currentTarget.getBoundingClientRect();
-    const ratio = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    const ratio = Math.min(
+      Math.max((e.clientX - rect.left) / rect.width, 0),
+      1
+    );
     audio.currentTime = ratio * (audio.duration || 0);
   };
 
   const fmt = (s) => {
     if (!isFinite(s)) return "--:--";
     const m = Math.floor(s / 60);
-    const ss = Math.floor(s % 60).toString().padStart(2, "0");
+    const ss = Math.floor(s % 60)
+      .toString()
+      .padStart(2, "0");
     return `${m}:${ss}`;
-    };
+  };
 
   return (
     <div className="w-full h-screen grid grid-cols-[min-content_auto] grid-rows-[1fr_auto] bg-black text-white font-sans">
@@ -112,7 +119,9 @@ export default function App() {
       {/* Main content */}
       <main className="bg-gradient-to-b from-neutral-900 to-black p-8 overflow-y-auto">
         <h1 className="text-3xl font-bold mb-2">Bienvenido a tu musica</h1>
-        <p className="text-zinc-400">Explora playlists, artistas, y albums aqui.</p>
+        <p className="text-zinc-400">
+          Explora playlists, artistas, y albums aqui.
+        </p>
 
         <div className="grid gap-6 mt-6 grid-cols-[repeat(auto-fill,minmax(12rem,1fr))]">
           {tracks.map((t) => (
@@ -127,7 +136,9 @@ export default function App() {
                   src={t.cover}
                   alt={t.title}
                   className="w-full h-full object-cover"
-                  onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
                 />
               </div>
               <p className="text-sm font-semibold">{t.title}</p>
@@ -149,7 +160,9 @@ export default function App() {
               src={current.cover}
               alt={current.title}
               className="w-full h-full object-cover"
-              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
             />
           </div>
           <div className="min-w-0">
@@ -159,44 +172,45 @@ export default function App() {
         </div>
 
         {/* controles */}
-<div className="flex items-center gap-6">
-  <button
-    className="hover:text-green-400"
-    onClick={() => {
-      const idx = tracks.findIndex(t => t.id === current.id);
-      const prev = tracks[(idx - 1 + tracks.length) % tracks.length];
-      setCurrent(prev);
-    }}
-    aria-label="Previous"
-  >
-    <SkipBack size={24} />
-  </button>
+        <div className="flex items-center gap-6">
+          <button
+            className="hover:text-green-400"
+            onClick={() => {
+              const idx = tracks.findIndex((t) => t.id === current.id);
+              const prev = tracks[(idx - 1 + tracks.length) % tracks.length];
+              setCurrent(prev);
+            }}
+            aria-label="Previous"
+          >
+            <SkipBack size={24} />
+          </button>
 
-  <button
-    onClick={togglePlay}
-    className="hover:text-green-400 p-2 rounded-full border border-zinc-700 hover:border-green-400 transition"
-    aria-label={isPlaying ? "Pause" : "Play"}
-  >
-    {isPlaying ? <Pause size={28} /> : <Play size={28} />}
-  </button>
+          <button
+            onClick={togglePlay}
+            className="hover:text-green-400 p-2 rounded-full border border-zinc-700 hover:border-green-400 transition"
+            aria-label={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? <Pause size={28} /> : <Play size={28} />}
+          </button>
 
-  <button
-    className="hover:text-green-400"
-    onClick={() => {
-      const idx = tracks.findIndex(t => t.id === current.id);
-      const next = tracks[(idx + 1) % tracks.length];
-      setCurrent(next);
-    }}
-    aria-label="Next"
-  >
-    <SkipForward size={24} />
-  </button>
-</div>
-
+          <button
+            className="hover:text-green-400"
+            onClick={() => {
+              const idx = tracks.findIndex((t) => t.id === current.id);
+              const next = tracks[(idx + 1) % tracks.length];
+              setCurrent(next);
+            }}
+            aria-label="Next"
+          >
+            <SkipForward size={24} />
+          </button>
+        </div>
 
         {/* progreso */}
         <div className="flex items-center gap-3 w-64">
-          <span className="text-xs text-zinc-400 w-10 text-right">{fmt(currentTime)}</span>
+          <span className="text-xs text-zinc-400 w-10 text-right">
+            {fmt(currentTime)}
+          </span>
           <div
             className="h-2 bg-zinc-800 rounded-full overflow-hidden flex-1 cursor-pointer"
             onClick={handleSeek}

@@ -17,7 +17,10 @@ export default function Sidebar() {
       if (!isResizing.current) return;
 
       setWidth((prev) => {
-        const newWidth = Math.min(Math.max(prev + e.movementX, minWidth), maxWidth);
+        const newWidth = Math.min(
+          Math.max(prev + e.movementX, minWidth),
+          maxWidth
+        );
         localStorage.setItem("sidebar-width", newWidth);
         return newWidth;
       });
@@ -39,10 +42,7 @@ export default function Sidebar() {
   return (
     <div className="flex h-full">
       {/* Sidebar */}
-      <div
-        style={{ width }}
-        className="bg-zinc-900 text-white p-4 select-none"
-      >
+      <div style={{ width }} className="bg-zinc-900 text-white p-4 select-none">
         <p className="text-lg font-semibold">Menu</p>
       </div>
 
