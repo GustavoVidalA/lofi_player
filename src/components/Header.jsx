@@ -14,9 +14,9 @@ function Header({ title, artist, cover, isPlaying, onToggle, onNext, onPrev }) {
         <p className="text-sm text-gray-300">{artist}</p>
         <p className="text-xs text-white/70">661,250 monthly listeners</p>
         <div className="flex items-center gap-4 mt-4">
-          <FollowButton />
           <PrevButton onPrev={onPrev} />
           <PlayPauseButton isPlaying={isPlaying} onToggle={onToggle} />
+          <FollowButton />
           <NextButton onNext={onNext} />
         </div>
       </div>
