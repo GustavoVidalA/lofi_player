@@ -16,13 +16,13 @@ function TrackItem({
       }`}
       onClick={onSelect}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <span className="w-5 text-sm text-gray-400">{index}</span>
         {cover && (
           <img
             src={cover}
             alt={`${title} cover`}
-            className="w-12 h-12 object-cover rounded-lg"
+            className="w-8 h-8 object-cover rounded-md"
           />
         )}
         <div>
